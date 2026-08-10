@@ -265,7 +265,7 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			//$$ {
 				//$$ temp = p;
 			//$$ }
-			//$$ createFromConfigPhase2(server, level, temp, state, pos, game);
+			//$$ server.execute(() -> createFromConfigPhase2(server, level, temp, state, pos, game));
 		//$$ });
 		//#elseif MC >= 1.20.2
 		//$$ GameProfile tempProfile = profile;
