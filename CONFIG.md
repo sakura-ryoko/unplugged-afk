@@ -24,7 +24,8 @@
         "resetHealthUponDeath": false,
         "unpluggedDisableDamage": false,
         "unpluggedHidePlayer": false,
-        "unpluggedHideFromOps": false
+        "unpluggedHideFromOps": false,
+        "offlineMode": false
     },
     "messages": {
         "broadcastMessages": false,
