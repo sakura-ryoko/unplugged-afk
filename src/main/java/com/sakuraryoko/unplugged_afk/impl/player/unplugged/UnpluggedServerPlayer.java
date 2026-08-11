@@ -183,7 +183,21 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		//#endif
 		GameProfile profile;
 
+		// Offline-mode ("cracked") servers derive a player's UUID from their
+		// username, and store player data under that UUID. When enabled, force
+		// the deterministic offline UUID so the fake player loads the correct
+		// inventory instead of a fresh one.
+		final boolean offlineMode = ConfigWrap.unplugged().offlineMode;
+
+		if (offlineMode)
+		{
+			uuid = ProfileWrap.offlineId(name);
+			opts.uuid = uuid;
+			profile = ProfileWrap.profile(uuid, name);
+		}
 		//#if MC >= 1.21.10
+		//$$ else
+		//$$ {
 		//$$ UUID tempUUID = OldUsersConverter.convertMobOwnerIfNecessary(server, name);
 		//$$ if (tempUUID != null && !tempUUID.equals(uuid))
 		//$$ {
@@ -196,21 +210,25 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		//$$ }
 		//$$ server.services().nameToIdCache().resolveOfflineUsers(server.isDedicatedServer() && server.usesAuthentication());
 		//$$ profile = new GameProfile(uuid, name);
+		//$$ }
 		//#else
-		try
+		else
 		{
-			profile = server.getProfileCache().get(name).orElse(
-					  server.getProfileCache().get(uuid).orElse(null)
-			);
-		}
-		finally
-		{
-			GameProfileCache.setUsesAuthentication(server.isDedicatedServer() && server.usesAuthentication());
-		}
+			try
+			{
+				profile = server.getProfileCache().get(name).orElse(
+						  server.getProfileCache().get(uuid).orElse(null)
+				);
+			}
+			finally
+			{
+				GameProfileCache.setUsesAuthentication(server.isDedicatedServer() && server.usesAuthentication());
+			}
 
-		if (profile == null)
-		{
-			profile = new GameProfile(uuid, name);
+			if (profile == null)
+			{
+				profile = new GameProfile(uuid, name);
+			}
 		}
 		//#endif
 
@@ -251,7 +269,15 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			return;
 		}
 
+		if (offlineMode)
+		{
+			// In offline mode the UUID is already forced above; skip the
+			// profile re-resolution which could swap in a different UUID.
+			createFromConfigPhase2(server, level, profile, state, pos, game);
+		}
 		//#if MC >= 1.21.10
+		//$$ else
+		//$$ {
 		//$$ server.services().nameToIdCache().resolveOfflineUsers(server.isDedicatedServer() && server.usesAuthentication());
 		//$$ fetchGameProfile(server, profile.id()).whenCompleteAsync((p, throwable) ->
 		//$$ {
@@ -267,7 +293,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			//$$ }
 			//$$ createFromConfigPhase2(server, level, temp, state, pos, game);
 		//$$ });
+		//$$ }
 		//#elseif MC >= 1.20.2
+		//$$ else
+		//$$ {
 		//$$ GameProfile tempProfile = profile;
 		//$$ fetchGameProfile(profile.getName()).thenAccept(opt ->
 		//$$ {
@@ -278,15 +307,19 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			//$$ }
 			//$$ createFromConfigPhase2(server, level, temp, state, pos, game);
 		//$$ });
+		//$$ }
 		//#else
-		if (profile.getProperties().containsKey("textures"))
+		else
 		{
-			AtomicReference<GameProfile> result = new AtomicReference<>();
-			SkullBlockEntity.updateGameprofile(profile, result::set);
-			profile = result.get();
-		}
+			if (profile.getProperties().containsKey("textures"))
+			{
+				AtomicReference<GameProfile> result = new AtomicReference<>();
+				SkullBlockEntity.updateGameprofile(profile, result::set);
+				profile = result.get();
+			}
 
-		createFromConfigPhase2(server, level, profile, state, pos, game);
+			createFromConfigPhase2(server, level, profile, state, pos, game);
+		}
 		//#endif
 	}
 

@@ -20,11 +20,13 @@
 
 package com.sakuraryoko.unplugged_afk.impl.player.wrap;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import org.jetbrains.annotations.ApiStatus;
 
 import com.mojang.authlib.GameProfile;
 //#if MC >= 1.21.10
+//$$ import net.minecraft.core.UUIDUtil;
 //$$ import net.minecraft.server.players.NameAndId;
 //#endif
 
@@ -59,5 +61,19 @@ public class ProfileWrap
 	public static GameProfile profile(UUID id, String name)
 	{
 		return new GameProfile(id, name);
+	}
+
+	/**
+	 * Compute the deterministic offline-mode UUID for a player name.
+	 * This is the same UUID an offline-mode ("cracked") server assigns to a
+	 * player, and the UUID under which their player data is stored.
+	 */
+	public static UUID offlineId(String name)
+	{
+//#if MC >= 1.21.10
+		//$$ return UUIDUtil.createOfflinePlayerUUID(name);
+//#else
+		return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+//#endif
 	}
 }

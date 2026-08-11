@@ -31,6 +31,7 @@ public class UnpluggedOptions implements IConfigOption
 	public boolean unpluggedDisableDamage;
 	public boolean unpluggedHidePlayer;
 	public boolean unpluggedHideFromOps;
+	public boolean offlineMode;
 
 	public UnpluggedOptions()
 	{
@@ -45,6 +46,7 @@ public class UnpluggedOptions implements IConfigOption
 		this.unpluggedDisableDamage = false;
 		this.unpluggedHidePlayer = false;
 		this.unpluggedHideFromOps = false;
+		this.offlineMode = false;
 	}
 
 	@Override
@@ -57,6 +59,7 @@ public class UnpluggedOptions implements IConfigOption
 		this.unpluggedDisableDamage = opts.unpluggedDisableDamage;
 		this.unpluggedHidePlayer = opts.unpluggedHidePlayer;
 		this.unpluggedHideFromOps = opts.unpluggedHideFromOps;
+		this.offlineMode = opts.offlineMode;
 
 		return this;
 	}
