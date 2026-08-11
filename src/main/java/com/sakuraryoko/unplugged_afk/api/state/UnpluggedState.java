@@ -22,10 +22,13 @@ package com.sakuraryoko.unplugged_afk.api.state;
 
 import org.jspecify.annotations.NonNull;
 
+import com.google.gson.annotations.JsonAdapter;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import com.sakuraryoko.unplugged_afk.impl.config.ConfigWrap;
+import com.sakuraryoko.unplugged_afk.impl.config.data.gson.UnpluggedStateAdapter;
 import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
 
 /**
@@ -37,6 +40,7 @@ import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
  * @param startTime Starting Epoch Time in ms
  * @param reason Reason why
  */
+@JsonAdapter(UnpluggedStateAdapter.class)
 public record UnpluggedState(UnpluggedStatus status, int time, long timeout, long startTime, String reason)
 {
 	public static final UnpluggedState DEFAULT = new UnpluggedState(UnpluggedStatus.INACTIVE, 129600, -1L, -1L, "");

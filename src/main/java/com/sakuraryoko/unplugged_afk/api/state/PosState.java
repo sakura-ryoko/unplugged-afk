@@ -23,10 +23,13 @@ package com.sakuraryoko.unplugged_afk.api.state;
 import javax.annotation.Nonnull;
 import org.jspecify.annotations.NonNull;
 
+import com.google.gson.annotations.JsonAdapter;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
+import com.sakuraryoko.unplugged_afk.impl.config.data.gson.PosStateAdapter;
 import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
 import com.sakuraryoko.unplugged_afk.impl.player.wrap.PosWrap;
 
@@ -39,6 +42,7 @@ import com.sakuraryoko.unplugged_afk.impl.player.wrap.PosWrap;
  * @param yaw Entity Yaw (XRot)
  * @param pitch Entity Rotation (YRot)
  */
+@JsonAdapter(PosStateAdapter.class)
 public record PosState(String location, int x, int y, int z, float yaw, float pitch)
 {
 	@Override

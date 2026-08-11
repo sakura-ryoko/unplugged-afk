@@ -23,9 +23,12 @@ package com.sakuraryoko.unplugged_afk.api.state;
 import java.util.Objects;
 import org.jspecify.annotations.NonNull;
 
+import com.google.gson.annotations.JsonAdapter;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+import com.sakuraryoko.unplugged_afk.impl.config.data.gson.GameStateAdapter;
 import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
 import com.sakuraryoko.unplugged_afk.impl.player.wrap.GameWrap;
 
@@ -35,6 +38,7 @@ import com.sakuraryoko.unplugged_afk.impl.player.wrap.GameWrap;
  * @param gameMode Game Mode
  * @param flying isFlying
  */
+@JsonAdapter(GameStateAdapter.class)
 public record GameState(String gameMode, boolean flying)
 {
 	@Override
