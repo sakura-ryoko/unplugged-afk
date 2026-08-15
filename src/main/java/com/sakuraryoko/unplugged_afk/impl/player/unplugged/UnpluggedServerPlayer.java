@@ -271,12 +271,8 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		//$$ GameProfile tempProfile = profile;
 		//$$ fetchGameProfile(profile.getName()).thenAccept(opt ->
 		//$$ {
-			//$$ GameProfile temp = tempProfile;
-			//$$ if (opt.isPresent())
-			//$$ {
-				//$$ temp = opt.get();
-			//$$ }
-			//$$ createFromConfigPhase2(server, level, temp, state, pos, game);
+			//$$ GameProfile temp = opt.orElse(tempProfile);
+			//$$ server.execute(() -> createFromConfigPhase2(server, level, temp, state, pos, game));
 		//$$ });
 		//#else
 		if (profile.getProperties().containsKey("textures"))
