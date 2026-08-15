@@ -48,6 +48,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //#if MC >= 1.21.10
 //$$ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //#else
@@ -59,11 +60,15 @@ import com.sakuraryoko.unplugged_afk.impl.player.unplugged.UnpluggedGamePacketLi
 import com.sakuraryoko.unplugged_afk.impl.player.unplugged.UnpluggedPlayerUtils;
 import com.sakuraryoko.unplugged_afk.impl.player.unplugged.UnpluggedServerPlayer;
 
+import java.util.Map;
+import java.util.UUID;
+
 @Mixin(PlayerList.class)
 @ApiStatus.Internal
 public abstract class MixinPlayerList_core
 {
 	@Shadow @Final private MinecraftServer server;
+	@Shadow @Final private Map<UUID, ServerPlayer> playersByUUID;
 
 	//#if MC >= 1.21.10
 	//$$ @Inject(method = "placeNewPlayer",
@@ -81,6 +86,14 @@ public abstract class MixinPlayerList_core
 		if (player instanceof UnpluggedServerPlayer sp)
 		{
 			sp.startingPosition.run();
+		}
+	}
+
+	@Inject(method = "remove", at = @At("HEAD"), cancellable = true)
+	private void suppressRemove(ServerPlayer player, CallbackInfo ci) {
+		ServerPlayer playerInList = this.playersByUUID.get(player.getUUID());
+		if (player != playerInList) {
+			ci.cancel();
 		}
 	}
 

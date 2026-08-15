@@ -5,7 +5,6 @@
     "plugin": "com.sakuraryoko.unplugged_afk.impl.compat.mixin.UnpluggedAfkMixinConfigPlugin",
     "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
     "mixins": [
-        "IMixinPlayerList",
         "MixinConnection",
         "MixinEntity",
         "MixinMinecraftServer",

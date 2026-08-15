@@ -30,7 +30,6 @@ import com.sakuraryoko.unplugged_afk.api.state.UnpluggedState;
 import com.sakuraryoko.unplugged_afk.api.state.UnpluggedStatus;
 import com.sakuraryoko.unplugged_afk.impl.events.PlayerEventsHandler;
 import com.sakuraryoko.unplugged_afk.impl.events.ServerEventsHandler;
-import com.sakuraryoko.unplugged_afk.impl.mixins.IMixinPlayerList;
 import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
 import com.sakuraryoko.unplugged_afk.impl.player.PlayerManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -412,11 +411,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			PlayerEventsHandler.getInstance().addShouldHideJoin(name);
 		}
 
-		server.executeBlocking(() ->
-		                       {
-			                       ((IMixinPlayerList) server.getPlayerList()).unplugged$save(player);
-			                       server.getPlayerList().remove(player);
-		                       });
+
+//			                       ((IMixinPlayerList) server.getPlayerList()).unplugged$save(player);
+	    pl.remove(player);
+
 		player.connection.disconnect(kickMsg);
 
 		//#if MC >= 1.20.1
@@ -796,11 +794,8 @@ public class UnpluggedServerPlayer extends ServerPlayer
 				final Component reason = InitWrap.text().formatTextSafe("Invalid");
 
 				this.kill(reason);
-				server.executeBlocking(() ->
-				                       {
-										   ((IMixinPlayerList) server.getPlayerList()).unplugged$save(this);
-										   server.getPlayerList().remove(this);
-									   });
+//										   ((IMixinPlayerList) server.getPlayerList()).unplugged$save(this);
+				server.getPlayerList().remove(this);
 
 				if (!ConfigWrap.mess().hideUnpluggedJoin)
 				{
@@ -898,11 +893,8 @@ public class UnpluggedServerPlayer extends ServerPlayer
 
 				Component reason = InitWrap.text().formatTextSafe(mess);
 				this.kill(reason);
-				server.executeBlocking(() ->
-				                       {
-										   ((IMixinPlayerList) server.getPlayerList()).unplugged$save(this);
-										   server.getPlayerList().remove(this);
-									   });
+//										   ((IMixinPlayerList) server.getPlayerList()).unplugged$save(this);
+				server.getPlayerList().remove(this);
 
 				if (ConfigWrap.mess().hideUnpluggedJoin)
 				{
