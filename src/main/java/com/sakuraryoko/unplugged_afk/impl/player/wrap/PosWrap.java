@@ -24,10 +24,10 @@ import javax.annotation.Nonnull;
 
 import org.jetbrains.annotations.ApiStatus;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import com.sakuraryoko.unplugged_afk.api.state.PosState;
 
@@ -36,7 +36,7 @@ public class PosWrap
 {
 	public static PosState defaultPos()
 	{
-		return new PosState(Level.OVERWORLD.location().toString(), 0, 0, 0, 0f, 0f);
+		return PosState.EMPTY;
 	}
 
 	public static PosState of(@Nonnull ServerPlayer player)
@@ -46,8 +46,8 @@ public class PosWrap
 		//#else
 		ResourceKey<Level> key = player.level.dimension();
 		//#endif
-		BlockPos pos = player.blockPosition();
+		Vec3 pos = player.position();
 
-		return new PosState(key.location().toString(), pos.getX(), pos.getY(), pos.getZ(), player.getYRot(), player.getXRot());
+		return new PosState(key.location().toString(), pos.x(), pos.y(), pos.z(), player.getYRot(), player.getXRot());
 	}
 }

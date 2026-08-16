@@ -33,14 +33,16 @@ import com.sakuraryoko.unplugged_afk.impl.player.wrap.PosWrap;
 /**
  * PosState - Wrapper around a Players' location, and rotations
  * @param location Level Identifier
- * @param x Entity Block X
- * @param y Entity Block Y
- * @param z Entity Block Z
+ * @param x Entity X
+ * @param y Entity Y
+ * @param z Entity Z
  * @param yaw Entity Yaw (XRot)
  * @param pitch Entity Rotation (YRot)
  */
-public record PosState(String location, int x, int y, int z, float yaw, float pitch)
+public record PosState(String location, double x, double y, double z, float yaw, float pitch)
 {
+	public static final PosState EMPTY = new PosState("minecraft:overworld", 0f, 0f, 0f, 0f, 0f);
+
 	@Override
 	public @NonNull String toString()
 	{
@@ -66,9 +68,9 @@ public record PosState(String location, int x, int y, int z, float yaw, float pi
 	public int hashCode()
 	{
 		int result = this.location().hashCode();
-		result = 31 * result + this.x();
-		result = 31 * result + this.y();
-		result = 31 * result + this.z();
+		result = 31 * result + Double.hashCode(this.x());
+		result = 31 * result + Double.hashCode(this.y());
+		result = 31 * result + Double.hashCode(this.z());
 		result = 31 * result + Float.floatToIntBits(this.yaw());
 		result = 31 * result + Float.floatToIntBits(this.pitch());
 		return result;
@@ -76,7 +78,7 @@ public record PosState(String location, int x, int y, int z, float yaw, float pi
 
 	public boolean isEmpty()
 	{
-		return this.x() == 0 && this.y() == 0 && this.z() == 0;
+		return this.equals(EMPTY);
 	}
 
 	public boolean matches(@Nonnull ServerPlayer player)
@@ -97,15 +99,15 @@ public record PosState(String location, int x, int y, int z, float yaw, float pi
 				InitWrap.text().formatText("§f [")
 		).append(
 				InitWrap.text().formatText(
-						String.format("%d, ", this.x())
+						String.format("%.2f, ", this.x())
 				)
 		).append(
 				InitWrap.text().formatText(
-						String.format("%d, ", this.y())
+						String.format("%.2f, ", this.y())
 				)
         ).append(
 				InitWrap.text().formatText(
-						String.format("%d]§r", this.z())
+						String.format("%.2f]§r", this.z())
 				)
 		);
 

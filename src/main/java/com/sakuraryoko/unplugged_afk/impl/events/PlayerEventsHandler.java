@@ -37,7 +37,6 @@ import com.sakuraryoko.unplugged_afk.impl.UnpluggedAfk;
 import com.sakuraryoko.unplugged_afk.impl.config.ConfigWrap;
 import com.sakuraryoko.unplugged_afk.impl.modinit.InitWrap;
 import com.sakuraryoko.unplugged_afk.impl.player.PlayerManager;
-import com.sakuraryoko.unplugged_afk.impl.player.wrap.ProfileWrap;
 import com.sakuraryoko.unplugged_afk.api.state.UnpluggedState;
 import com.sakuraryoko.unplugged_afk.api.state.UnpluggedStatus;
 import com.sakuraryoko.unplugged_afk.impl.player.unplugged.UnpluggedPlayerUtils;
@@ -144,7 +143,7 @@ public class PlayerEventsHandler implements IPlayerEventsDispatch
 	public void onTick(ServerPlayer player)
 	{
 		PosState pos = PlayerManager.getInstance().getPos(player.getUUID());
-		if (!pos.isEmpty() && pos.matches(player)) { return; }
+		if (pos.matches(player)) { return; }
 		PlayerManager.getInstance().updatePlayerData(player);
 	}
 

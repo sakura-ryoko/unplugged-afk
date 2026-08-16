@@ -50,7 +50,6 @@ import com.mojang.authlib.GameProfile;
 //$$ import net.minecraft.server.players.OldUsersConverter;
 //$$ import net.minecraft.world.item.component.ResolvableProfile;
 //#endif
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -84,6 +83,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 import com.sakuraryoko.unplugged_afk.api.state.GameState;
 import com.sakuraryoko.unplugged_afk.api.state.PosState;
@@ -298,11 +298,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		UnpluggedServerPlayer shadow = new UnpluggedServerPlayer(server, level, profile, null);
 		//#endif
 
-		//#if MC >= 1.21.10
-		//$$ shadow.startingPosition = () -> shadow.snapTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
-		//#else
-		shadow.startingPosition = () -> shadow.moveTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
-		//#endif
+		if (!pos.isEmpty())
+		{
+			shadow.startingPosition = () -> onStartingPositonWrap(shadow, pos);
+		}
 
 		if (ConfigWrap.mess().hideUnpluggedJoin)
 		{
@@ -320,7 +319,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		UnpluggedPlayerUtils.loadPlayerNbt(shadow);
 
 		shadow.setHealth(20.0f);
-		shadow.connection.teleport(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+		if (!pos.matches(shadow) && !pos.isEmpty())
+		{
+			shadow.connection.teleport(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+		}
 		shadow.gameMode.changeGameModeForPlayer(gameType);
 		shadow.unsetRemoved();
 		//#if MC >= 1.20.6
@@ -446,11 +448,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			return;
 		}
 
-		//#if MC >= 1.21.10
-		//$$ shadow.startingPosition = () -> shadow.snapTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
-		//#else
-		shadow.startingPosition = () -> shadow.moveTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
-		//#endif
+		if (!pos.isEmpty())
+		{
+			shadow.startingPosition = () -> onStartingPositonWrap(shadow, pos);
+		}
 
 		//#if MC >= 1.20.6
 		//$$ pl.placeNewPlayer(new UnpluggedConnection(PacketFlow.SERVERBOUND), shadow, new CommonListenerCookie(profile, 0, ClientInformation.createDefault(), true));
@@ -463,7 +464,10 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		UnpluggedPlayerUtils.loadPlayerNbt(shadow);
 
 		shadow.setHealth(health);
-		shadow.connection.teleport(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+		if (!pos.matches(shadow) && !pos.isEmpty())
+		{
+			shadow.connection.teleport(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+		}
 		shadow.gameMode.changeGameModeForPlayer(gameType);
 		//#if MC >= 1.20.6
 		//$$ shadow.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(0.6F);
@@ -532,6 +536,18 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		return shadow;
 	}
 	//#endif
+
+	private static void onStartingPositonWrap(UnpluggedServerPlayer sp, PosState pos)
+	{
+		if (!pos.matches(sp) && !pos.isEmpty())
+		{
+			//#if MC >= 1.21.10
+			//$$ sp.startingPosition = () -> sp.snapTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+			//#else
+			sp.startingPosition = () -> sp.moveTo(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+			//#endif
+		}
+	}
 
 	private void createUnpluggedPost(MinecraftServer server)
 	{
@@ -797,9 +813,9 @@ public class UnpluggedServerPlayer extends ServerPlayer
 			}
 
 			PosState pos = PlayerManager.getInstance().getPos(this.uuid);
-			BlockPos blockPos = this.blockPosition();
+			Vec3 currentPos = this.position();
 
-			if (blockPos.getX() != pos.x() || blockPos.getY() != pos.y() || blockPos.getZ() != pos.z())
+			if (currentPos.x() != pos.x() || currentPos.y() != pos.y() || currentPos.z() != pos.z())
 			{
 				PlayerManager.getInstance().updatePlayerData(this);
 			}
