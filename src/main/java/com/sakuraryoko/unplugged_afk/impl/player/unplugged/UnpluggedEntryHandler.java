@@ -92,7 +92,7 @@ public record UnpluggedEntryHandler(UnpluggedEntry entry)
             }
         }
 
-        UnpluggedAfkEvents.UNPLUGGED_START.invoker().onUnpluggedEvent(player.getUUID(), state);
+        UnpluggedAfkEvents.UNPLUGGED_START.invoker().onUnpluggedEvent(player.getUUID(), state.isActive());
     }
 
     @ApiStatus.Internal
@@ -139,7 +139,7 @@ public record UnpluggedEntryHandler(UnpluggedEntry entry)
         }
 
         final UUID uuid = this.entry().player() != null ? this.entry().player().getUUID() : null;
-        UnpluggedAfkEvents.UNPLUGGED_END.invoker().onUnpluggedEvent(uuid, new UnpluggedState(reason, this.entry().timer(), this.entry().timeout(), this.entry().startTimeMs(), this.entry().reason()));
+        UnpluggedAfkEvents.UNPLUGGED_END.invoker().onUnpluggedEvent(uuid, false);
         this.entry().clearPlayer();
         this.entry().reset();
     }

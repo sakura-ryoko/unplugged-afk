@@ -26,8 +26,6 @@ import javax.annotation.Nullable;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
-import com.sakuraryoko.unplugged_afk.api.state.UnpluggedState;
-
 /**
  * UnpluggedAFK API Events
  */
@@ -44,7 +42,7 @@ public class UnpluggedAfkEvents
 				{
 					for (var c : e)
 					{
-						c.onUnpluggedEvent(p, st.copy());
+						c.onUnpluggedEvent(p, st);
 					}
 				}
 			});
@@ -56,7 +54,7 @@ public class UnpluggedAfkEvents
 				{
 					for (var c : e)
 					{
-						c.onUnpluggedEvent(p, st.copy());
+						c.onUnpluggedEvent(p, st);
 					}
 				}
 			});
@@ -68,13 +66,13 @@ public class UnpluggedAfkEvents
 				{
 					for (var c : e)
 					{
-						c.onUnpluggedEvent(p, st.copy());
+						c.onUnpluggedEvent(p, st);
 					}
 				}
 			});
 
 	public interface UnpluggedEvent
 	{
-		void onUnpluggedEvent(@Nullable UUID player, UnpluggedState state);
+		void onUnpluggedEvent(@Nullable UUID player, boolean active);
 	}
 }

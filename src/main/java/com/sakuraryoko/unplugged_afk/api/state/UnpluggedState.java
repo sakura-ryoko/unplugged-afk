@@ -148,4 +148,9 @@ public record UnpluggedState(UnpluggedStatus status, int time, long timeout, lon
 	{
 		return new UnpluggedState(this.status(), this.time(), this.timeout(), this.startTime(), this.reason());
 	}
+
+	public boolean isActive()
+	{
+		return this.status() == UnpluggedStatus.ACTIVE;
+	}
 }

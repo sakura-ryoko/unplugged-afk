@@ -357,7 +357,7 @@ public class UnpluggedPlayerUtils
 		}
 
 		newSp.fromState(newState);
-		UnpluggedAfkEvents.UNPLUGGED_RESPAWN.invoker().onUnpluggedEvent(ProfileWrap.id(profile), newState);
+		UnpluggedAfkEvents.UNPLUGGED_RESPAWN.invoker().onUnpluggedEvent(ProfileWrap.id(profile), newState.isActive());
 	}
 
 	@ApiStatus.Internal
