@@ -296,7 +296,11 @@ public class UnpluggedPlayerUtils
 
 			if (player.isInvulnerable() && player.gameMode.isSurvival())
 			{
+				//#if MC >= 26.3
+				//$$player.setPermanentlyInvulnerable(false);
+				//#else
 				player.setInvulnerable(false);
+				//#endif
 			}
 
 			final String name = ProfileWrap.name(profile);

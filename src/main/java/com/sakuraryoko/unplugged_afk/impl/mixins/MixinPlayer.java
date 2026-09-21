@@ -20,17 +20,17 @@
 
 package com.sakuraryoko.unplugged_afk.impl.mixins;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.jetbrains.annotations.ApiStatus;
 import org.objectweb.asm.Opcodes;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.sakuraryoko.unplugged_afk.impl.player.unplugged.UnpluggedServerPlayer;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 @Mixin(Player.class)
 @ApiStatus.Internal
@@ -38,12 +38,16 @@ public abstract class MixinPlayer
 {
 	@WrapOperation(
 			//#if MC >= 1.21.11
-			//$$ method = "causeExtraKnockback",
+			method = "causeExtraKnockback",
 			//#else
-			method = "attack",
+			//$$ method = "attack",
 			//#endif
 			at = @At(value = "FIELD",
-			         target = "Lnet/minecraft/world/entity/Entity;hurtMarked:Z",
+					//#if MC >= 26.3
+					//$$ target = "Lnet/minecraft/world/entity/Entity;syncVelocity:Z",
+					//#else
+					target = "Lnet/minecraft/world/entity/Entity;hurtMarked:Z",
+					//#endif
 			         ordinal = 0,
 			         opcode = Opcodes.GETFIELD
 			)
@@ -51,6 +55,10 @@ public abstract class MixinPlayer
 	private boolean unplugged$onKnockback(Entity instance, Operation<Boolean> original)
 	{
 		//		boolean orig = original.call(instance);
+		//#if MC >= 26.3
+		//$$ return instance.syncVelocity && !(instance instanceof UnpluggedServerPlayer);
+		//#else
 		return instance.hurtMarked && !(instance instanceof UnpluggedServerPlayer);
+		//#endif
 	}
 }
