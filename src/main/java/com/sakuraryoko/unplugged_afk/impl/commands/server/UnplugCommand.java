@@ -56,13 +56,13 @@ public class UnplugCommand implements IServerCommand
     {
         dispatcher.register(
                 literal(this.getName())
-                        .requires(PermsWrap.check(this.getNode(), ConfigWrap.cmdOpt().unplugCommandPermissions))
+                        .requires(ctx -> PermsWrap.check(ctx, this.getName(), ConfigWrap.cmdOpt().unplugCommandPermissions))
                         .executes(ctx -> this.setUnpluggedAfk(ctx, -1, ""))
                         .then(argument("minutes", IntegerArgumentType.integer(1))
-                                      .requires(PermsWrap.check(this.getNode(), ConfigWrap.cmdOpt().unplugCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName(), ConfigWrap.cmdOpt().unplugCommandPermissions))
                                       .executes(ctx -> this.setUnpluggedAfk(ctx, IntegerArgumentType.getInteger(ctx, "minutes"), ""))
                                       .then(argument("reason", StringArgumentType.greedyString())
-                                                    .requires(PermsWrap.check(this.getNode(), ConfigWrap.cmdOpt().unplugCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.check(ctx, this.getName(), ConfigWrap.cmdOpt().unplugCommandPermissions))
                                                     .executes(ctx -> this.setUnpluggedAfk(ctx, IntegerArgumentType.getInteger(ctx, "minutes"), StringArgumentType.getString(ctx, "reason")))
                                       )
                         )

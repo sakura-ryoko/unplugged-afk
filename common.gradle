@@ -7,6 +7,7 @@ apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-l
 apply plugin: 'com.replaymod.preprocess'
 
 repositories {
+	mavenLocal()
 	maven {
 		url = 'https://maven.parchmentmc.org'
 		content { includeGroup('org.parchmentmc.data') }
@@ -78,6 +79,9 @@ dependencies {
 	if (mcVersion >= 12109) {  // "fabric-resource-loader-v0" dependency since fabric api 0.133.11 (1.21.9-rc1)
 		fabricApiModules.add("fabric-resource-loader-v1")
 	}
+	if (mcVersion >= 260300) {  // "fabric-permission-api-v1" dependency since 26.3
+		fabricApiModules.add("fabric-permission-api-v1")
+	}
 	fabricApiModules.forEach {
 		include(autoImplementation(fabricApi.module(it, project.fabric_api_version)))
 	}
@@ -92,9 +96,11 @@ dependencies {
 	// AFKPlus Specific
 //	autoImplementation include("com.github.sakura-ryoko.corelib:corelib-mc${project.minecraft_version}:${project.corelib_version}")
 //	autoImplementation include("com.github.sakura-ryoko.more-color-api:more-color-api-mc${project.minecraft_version}:${project.more_color_api_version}")
-	autoImplementation include("com.sakuraryoko:corelib:${project.corelib_version}-mc${project.minecraft_version}")
+	autoImplementation include("com.sakuraryoko:core-lib-api:${project.core_lib_version}-mc${project.minecraft_version}")
 //	autoImplementation include("com.sakuraryoko:more-color-api:${project.more_color_api_version}-mc${project.minecraft_version}")
-	autoImplementation include("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")
+	if (project.fabric_permissions_api_version.size() > 0) {
+		autoImplementation include("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")
+	}
 //	autoImplementation "eu.pb4:placeholder-api:${project.placeholder_api_version}"
 //	autoCompileOnly "maven.modrinth:vanish:${project.vanish_compat_version}"
 }

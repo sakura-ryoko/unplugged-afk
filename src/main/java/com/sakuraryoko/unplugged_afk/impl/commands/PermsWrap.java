@@ -20,23 +20,26 @@
 
 package com.sakuraryoko.unplugged_afk.impl.commands;
 
-//#if MC >= 1.16.5
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.ApiStatus;
+
+//#if MC >= 26.3
+//$$ import net.minecraft.resources.Identifier;
+//#elseif MC >= 1.16.5
 //$$ import me.lucko.fabric.api.permissions.v0.Permissions;
+//#else
 //#endif
 
 //#if MC >= 1.21.11
 //$$ import net.minecraft.server.permissions.PermissionLevel;
 //$$ import net.minecraft.util.Mth;
 //#endif
-import java.util.function.Predicate;
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Predicates;
-import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
+import com.sakuraryoko.unplugged_afk.impl.Reference;
 import com.sakuraryoko.unplugged_afk.impl.config.ConfigWrap;
 
 /**
@@ -45,47 +48,119 @@ import com.sakuraryoko.unplugged_afk.impl.config.ConfigWrap;
 @ApiStatus.Internal
 public class PermsWrap
 {
-	public static Predicate<CommandSourceStack> check(@Nonnull String node, int level)
+	public static final String REGEX_ALLOWED = "[^a-z0-9:_./\\-]+";        // Identifier Safe
+
+	public static boolean check(@Nonnull CommandSourceStack src, @Nonnull String node, int pl)
 	{
-//#if MC >= 1.16.5
-//$$		return Permissions.require(node, permissionFromInt(level));
-//#else
-		return (src -> src.hasPermission(permissionFromInt(level)));
-//#endif
+	//#if MC >= 1.21.11
+		//$$return check(src, node, PermissionLevel.byId(Mth.clamp(pl, 0, PermissionLevel.OWNERS.id())));
+	//$$}
+
+	//$$public static boolean check(@Nonnull CommandSourceStack src, @Nonnull String node, @Nonnull PermissionLevel pl)
+	//$${
+	//#endif
+	//#if MC >= 26.3
+		//$$ final String prefixed = Reference.MOD_ID + ":" + node;
+		//$$ Identifier id = Identifier.tryParse(sanitizeNode(prefixed));
+
+		//$$ if (id != null)
+		//$${
+			//$$ ServerPlayer p = playerOrNull(src);
+
+			//$$if (p != null)
+			//$${
+				//$$return p.checkPermission(id, pl);
+			//$$}
+
+			//$$return src.checkPermission(id, pl);
+		//$$}
+
+		//$$ return false;
+	//#elseif MC >= 1.16.5
+		//$$ final String prefixed = Reference.MOD_ID + "." + node;
+		//$$ return Permissions.check(src, prefixed, pl);
+	//#else
+		return src.hasPermission(pl);
+	//#endif
 	}
 
-	public static Predicate<CommandSourceStack> checkAdv(@Nonnull String node, int level)
+	public static boolean checkAdv(@Nonnull CommandSourceStack src, @Nonnull String node, int pl)
 	{
+	//#if MC >= 1.21.11
+		//$$return checkAdv(src, node, PermissionLevel.byId(Mth.clamp(pl, 0, PermissionLevel.OWNERS.id())));
+	//$$}
+
+	//$$public static boolean checkAdv(@Nonnull CommandSourceStack src, @Nonnull String node, @Nonnull PermissionLevel pl)
+	//$${
+	//#endif
 		if (!ConfigWrap.mainOpt().advancedAdminOptions)
 		{
-			return Predicates.alwaysFalse();
+			return false;
 		}
+	//#if MC >= 26.3
+		//$$ final String prefixed = Reference.MOD_ID + ":" + node;
+		//$$ Identifier id = Identifier.tryParse(sanitizeNode(prefixed));
 
-//#if MC >= 1.16.5
-//$$		return Permissions.require(node, permissionFromInt(level));
-//#else
-		return (src -> src.hasPermission(permissionFromInt(level)));
-//#endif
+		//$$ if (id != null)
+		//$${
+			//$$ ServerPlayer p = playerOrNull(src);
+
+			//$$if (p != null)
+			//$${
+				//$$return p.checkPermission(id, pl);
+			//$$}
+
+			//$$return src.checkPermission(id, pl);
+		//$$}
+
+		//$$ return false;
+	//#elseif MC >= 1.16.5
+		//$$ final String prefixed = Reference.MOD_ID + "." + node;
+		//$$ return Permissions.check(src, prefixed, pl);
+	//#else
+		return src.hasPermission(pl);
+	//#endif
 	}
 
-	public static boolean check(@Nonnull Entity entity, @Nonnull String node, int level)
+	public static boolean check(@Nonnull Entity entity, @Nonnull String node, int pl)
 	{
-//#if MC >= 1.16.5
-//$$		return Permissions.check(entity, node, permissionFromInt(level));
-//#else
-		return entity.hasPermissions(permissionFromInt(level));
-//#endif
+	//#if MC >= 1.21.11
+		//$$return check(entity, node, PermissionLevel.byId(Mth.clamp(pl, 0, PermissionLevel.OWNERS.id())));
+	//$$}
+
+	//$$public static boolean check(@Nonnull Entity entity, @Nonnull String node, @Nonnull PermissionLevel pl)
+	//$${
+	//#endif
+	//#if MC >= 26.3
+		//$$ final String prefixed = Reference.MOD_ID + ":" + node;
+		//$$ Identifier id = Identifier.tryParse(sanitizeNode(prefixed));
+
+		//$$ if (id != null)
+		//$${
+			//$$return entity.checkPermission(id, pl);
+		//$$}
+
+		//$$ return false;
+	//#elseif MC >= 1.16.5
+		//$$ final String prefixed = Reference.MOD_ID + "." + node;
+		//$$ return Permissions.check(entity, prefixed, pl);
+	//#else
+		return entity.hasPermissions(pl);
+	//#endif
 	}
 
-	//#if MC >= 1.21.11
-//$$	public static PermissionLevel permissionFromInt(int level)
-//$$	{
-//$$		return PermissionLevel.byId(Mth.clamp(level, 0, PermissionLevel.OWNERS.id()));
-//$$	}
-//#else
-public static int permissionFromInt(int level)
-{
-	return level;
-}
-//#endif
+	public static String sanitizeNode(@Nonnull final String node)
+	{
+		return node.toLowerCase().replaceAll(REGEX_ALLOWED, "");
+	}
+
+	public static ServerPlayer playerOrNull(@Nonnull CommandSourceStack src)
+	{
+		try
+		{
+			return src.getPlayerOrException();
+		}
+		catch (Exception ignored) {}
+		return null;
+	}
 }

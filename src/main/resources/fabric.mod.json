@@ -29,8 +29,18 @@
 
   "depends": {
     "fabricloader": ">=0.11.4",
-    "corelib": "*",
-    "fabric-permissions-api-v0": "*",
+    "core-lib-api": "*",
     "minecraft": "${minecraft_dependency}"
+  },
+
+  "custom": {
+    "modmenu": {
+      "parent":{
+        "id": "core-lib-api",
+        "name": "Core Lib API",
+        "description": "Core Library API",
+        "badges": [ "library" ]
+      }
+    }
   }
 }

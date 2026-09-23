@@ -43,14 +43,22 @@ public abstract class MixinPlayer
 			method = "attack",
 			//#endif
 			at = @At(value = "FIELD",
+			         //#if MC >= 26.3
+			         //$$ target = "Lnet/minecraft/world/entity/Entity;syncVelocity:Z",
+			         //#else
 			         target = "Lnet/minecraft/world/entity/Entity;hurtMarked:Z",
+			         //#endif
 			         ordinal = 0,
 			         opcode = Opcodes.GETFIELD
 			)
 	)
 	private boolean unplugged$onKnockback(Entity instance, Operation<Boolean> original)
 	{
-		//		boolean orig = original.call(instance);
+	//		boolean orig = original.call(instance);
+		//#if MC >= 26.3
+		//$$ return instance.syncVelocity && !(instance instanceof UnpluggedServerPlayer);
+		//#else
 		return instance.hurtMarked && !(instance instanceof UnpluggedServerPlayer);
+		//#endif
 	}
 }

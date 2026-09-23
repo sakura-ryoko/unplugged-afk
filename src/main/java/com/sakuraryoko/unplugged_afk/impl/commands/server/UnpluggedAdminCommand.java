@@ -78,34 +78,34 @@ public class UnpluggedAdminCommand implements IServerCommand
     {
         dispatcher.register(
                 literal(this.getName())
-                        .requires(PermsWrap.check(this.getNode(), ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                        .requires(ctx -> PermsWrap.check(ctx, this.getName(), ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                         .executes(this::about)
                         .then(literal("save")
-                                      .requires(PermsWrap.check(this.getNode()+".save", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".save", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .executes(this::save)
                         )
                         .then(literal("reload")
-                                      .requires(PermsWrap.check(this.getNode()+".reload", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".reload", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .executes(this::reload)
                         )
                         .then(literal("list")
-                                      .requires(PermsWrap.check(this.getNode()+".list", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".list", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .executes(this::listUnpluggedMap)
                                       .then(literal("players")
-                                                    .requires(PermsWrap.checkAdv(this.getNode()+".list.players", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".list.players", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .executes(this::listPlayerMap)
                                       )
                                       .then(literal("unplugged")
-                                                    .requires(PermsWrap.checkAdv(this.getNode()+".list.unplugged", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".list.unplugged", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .executes(this::listUnpluggedMap)
                                       )
                                       .then(literal("all")
-                                                    .requires(PermsWrap.checkAdv(this.getNode()+".list.all", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".list.all", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .executes(this::listAll)
                                       )
                         )
                         .then(literal("info")
-                                      .requires(PermsWrap.checkAdv(this.getNode()+".info", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".info", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .executes(this::infoPlayer)
                                       .then(argument("player", EntityArgument.player())
                                                     .executes(ctx ->
@@ -114,11 +114,11 @@ public class UnpluggedAdminCommand implements IServerCommand
                                       )
                         )
                         .then(literal("purge")
-                                      .requires(PermsWrap.check(this.getNode()+".purge", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".purge", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .executes(this::purgePlayers)
                         )
                         .then(literal("spawn")
-                                      .requires(PermsWrap.check(this.getNode()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .then(argument("player", StringArgumentType.string())
                                                     .suggests(
                                                             (ctx, builder) ->
@@ -129,7 +129,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                                                             PlayerUtils::formatEntityTooltip
                                                                     )
                                                     )
-                                                    .requires(PermsWrap.check(this.getNode()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.check(ctx, this.getName()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .executes(ctx ->
                                                               {
                                                                   String result = StringArgumentType.getString(ctx, "player");
@@ -137,7 +137,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                                               }
                                                     )
                                                     .then(argument("minutes", IntegerArgumentType.integer(1))
-                                                                  .requires(PermsWrap.check(this.getNode()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                                  .requires(ctx -> PermsWrap.check(ctx, this.getName()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                                   .executes(ctx ->
                                                                             {
                                                                                 String result = StringArgumentType.getString(ctx, "player");
@@ -145,7 +145,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                                                             }
                                                                   )
                                                                   .then(argument("reason", StringArgumentType.greedyString())
-                                                                                .requires(PermsWrap.check(this.getNode()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                                                .requires(ctx -> PermsWrap.check(ctx, this.getName()+".spawn", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                                                 .executes(ctx ->
                                                                                           {
                                                                                               String result = StringArgumentType.getString(ctx, "player");
@@ -157,7 +157,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                       )
                         )
                         .then(literal("kick")
-                                      .requires(PermsWrap.check(this.getNode()+".kick", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.check(ctx, this.getName()+".kick", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .then(argument("target", StringArgumentType.string())
                                                     .suggests(
                                                             (ctx, builder) ->
@@ -168,7 +168,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                                                             PlayerUtils::formatEntityTooltip
                                                                     )
                                                     )
-                                                    .requires(PermsWrap.check(this.getNode()+".kick", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.check(ctx, this.getName()+".kick", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .executes(ctx ->
                                                               {
                                                                   String result = StringArgumentType.getString(ctx, "target");
@@ -178,7 +178,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                       )
                         )
                         .then(literal("set")
-                                      .requires(PermsWrap.checkAdv(this.getNode()+".set", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                      .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".set", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                       .then(argument("config", StringArgumentType.string())
                                                     .suggests(
                                                             (ctx, builder) ->
@@ -189,7 +189,7 @@ public class UnpluggedAdminCommand implements IServerCommand
                                                                             Component::literal
                                                                     )
                                                     )
-                                                    .requires(PermsWrap.checkAdv(this.getNode()+".set", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
+                                                    .requires(ctx -> PermsWrap.checkAdv(ctx, this.getName()+".set", ConfigWrap.cmdOpt().unpluggedAdminCommandPermissions))
                                                     .then(argument("value", StringArgumentType.greedyString())
                                                                   .suggests((ctx, builder) ->
                                                                             {
