@@ -38,6 +38,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 //#if MC >= 1.19.3
@@ -142,6 +143,44 @@ public class UnpluggedPlayerUtils
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sends the joining player a one-time private system message listing the
+	 * names of currently unplugged (AFK) players, if any are active and
+	 * `messages.notifyUnpluggedOnJoin` is enabled. No-op otherwise.
+	 */
+	@ApiStatus.Internal
+	public static void notifyPlayerOfUnplugged(@Nonnull MinecraftServer server, @Nonnull ServerPlayer player)
+	{
+		if (!ConfigWrap.mess().notifyUnpluggedOnJoin)
+		{
+			return;
+		}
+
+		ImmutableList<UnpluggedServerPlayer> shadows = getShadows(server);
+
+		if (shadows.isEmpty())
+		{
+			return;
+		}
+
+		MutableComponent text = Component.literal(ConfigWrap.mess().unpluggedJoinNotifyPrefix);
+		String punctuation = ConfigWrap.mess().unpluggedPunctuation;
+		boolean first = true;
+
+		for (UnpluggedServerPlayer shadow : shadows)
+		{
+			if (!first)
+			{
+				text.append(Component.literal(punctuation));
+			}
+
+			text.append(shadow.getName());
+			first = false;
+		}
+
+		player.sendSystemMessage(text);
 	}
 
 	@ApiStatus.Internal

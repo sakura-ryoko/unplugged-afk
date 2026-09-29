@@ -16,8 +16,10 @@
         "unplugCommandPermissions": 0,
         "unpluggedAdminCommandPermissions": 4,
         "afkCommandPermissions": 0,
+        "unpluggedListCommandPermissions": 0,
         "enableUnplugCommand": true,
-        "enableAfkCommand": false
+        "enableAfkCommand": false,
+        "enableUnpluggedListCommand": true
     },
     "unplugged": {
         "defaultUnpluggedTimeout": 129600,
@@ -31,9 +33,14 @@
         "hideUnpluggedJoin": false,
         "displayDuration": false,
         "displayReturnFeedback": false,
+        "showUnpluggedTag": false,
+        "notifyUnpluggedOnJoin": false,
         "defaultUnpluggedReason": "",
         "unpluggedPlayerPrefix": "§e",
         "unpluggedPlayerSuffix": "§r",
+        "unpluggedTagPrefix": "",
+        "unpluggedTagSuffix": " §7[AFK]§r",
+        "unpluggedJoinNotifyPrefix": "§7Currently unplugged: §r",
         "unpluggedKickMessage": "§6Your player will be AFK§r",
         "unpluggedExpiredReason": "§eTimeout expired§r",
         "unpluggedStarted": " §ehas been unplugged§r",

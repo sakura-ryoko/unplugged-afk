@@ -30,6 +30,7 @@ import org.jetbrains.annotations.ApiStatus;
 import net.fabricmc.loader.api.FabricLoader;
 
 import com.sakuraryoko.unplugged_afk.impl.commands.server.UnpluggedAdminCommand;
+import com.sakuraryoko.unplugged_afk.impl.commands.server.UnpluggedListCommand;
 import com.sakuraryoko.unplugged_afk.impl.commands.server.UnplugCommand;
 import com.sakuraryoko.corelib.impl.commands.CommandManager;
 
@@ -45,6 +46,11 @@ public class CommandRegister
             if (ConfigWrap.cmdOpt().enableUnplugCommand)
             {
                 CommandManager.getInstance().registerCommandHandler(new UnplugCommand());
+            }
+
+            if (ConfigWrap.cmdOpt().enableUnpluggedListCommand)
+            {
+                CommandManager.getInstance().registerCommandHandler(new UnpluggedListCommand());
             }
 
             if (ConfigWrap.cmdOpt().enableAfkCommand && checkForAfkModConflicts())

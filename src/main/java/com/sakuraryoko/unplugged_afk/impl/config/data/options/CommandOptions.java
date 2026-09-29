@@ -30,8 +30,10 @@ public class CommandOptions implements IConfigOption
     public int unplugCommandPermissions;
     public int unpluggedAdminCommandPermissions;
     public int afkCommandPermissions;
+    public int unpluggedListCommandPermissions;
     public boolean enableUnplugCommand;
     public boolean enableAfkCommand;
+    public boolean enableUnpluggedListCommand;
 
     public CommandOptions()
     {
@@ -43,8 +45,10 @@ public class CommandOptions implements IConfigOption
         this.unplugCommandPermissions = 0;
         this.unpluggedAdminCommandPermissions = 4;
         this.afkCommandPermissions = 0;
+        this.unpluggedListCommandPermissions = 0;
         this.enableUnplugCommand = true;
         this.enableAfkCommand = false;
+        this.enableUnpluggedListCommand = true;
     }
 
     @Override
@@ -55,8 +59,10 @@ public class CommandOptions implements IConfigOption
         this.unplugCommandPermissions = opts.unplugCommandPermissions;
         this.unpluggedAdminCommandPermissions = opts.unpluggedAdminCommandPermissions;
         this.afkCommandPermissions = opts.afkCommandPermissions;
+        this.unpluggedListCommandPermissions = opts.unpluggedListCommandPermissions;
         this.enableUnplugCommand = opts.enableUnplugCommand;
         this.enableAfkCommand = opts.enableAfkCommand;
+        this.enableUnpluggedListCommand = opts.enableUnpluggedListCommand;
 
         return this;
     }

@@ -588,6 +588,25 @@ public class UnpluggedServerPlayer extends ServerPlayer
 		return this.isValid;
 	}
 
+	@Override
+	public Component getTabListDisplayName()
+	{
+		if (ConfigWrap.mess().showUnpluggedTag)
+		{
+			String prefix = ConfigWrap.mess().unpluggedTagPrefix;
+			String suffix = ConfigWrap.mess().unpluggedTagSuffix;
+			Component base = super.getTabListDisplayName();
+			Component name = base != null ? base : this.getName();
+
+			return Component.empty()
+					.append(Component.literal(prefix == null ? "" : prefix))
+					.append(name)
+					.append(Component.literal(suffix == null ? "" : suffix));
+		}
+
+		return super.getTabListDisplayName();
+	}
+
 	public int getTimer()
 	{
 		return this.time;

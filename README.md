@@ -23,6 +23,7 @@
 ### Player Commands
 * **`/unplug [<minutes>] [<reason>]`**: Disconnects you and leaves an unplugged bot in your place.
   * *Note: This command cannot be used by the single-player server owner*.
+* **`/unplugged [list]`**: Lists the players who are currently unplugged (AFK). Enabled by default for everyone; gated by `unpluggedListCommandPermissions`.
 
 ### Admin Commands
 Requires permission level 3 by default.
@@ -54,12 +55,16 @@ The mod features a highly customizable `unplugged_afk.json` file. Key options in
 | **Command**   | `unplugCommandPermissions`         | Permission level required to use `/unplug`.                                                               | `0`      |
 | **Command**   | `unpluggedAdminCommandPermissions` | Permission level for `/unplugged-admin`.                                                                  | `3`      |
 | **Command**   | `afkCommandPermissions`            | Permission level required to use `/afk`.                                                                  | `0`      |
+| **Command**   | `unpluggedListCommandPermissions`  | Permission level required to use `/unplugged list`.                                                       | `0`      |
 | **Command**   | `enableUnplugCommand`              | Enables the `/unplug` Command.                                                                            | `true`   |
 | **Command**   | `enableAfkCommand`                 | Enables the `/afk` Command. (Works the same as `/unplug`)                                                 | `false`  |
+| **Command**   | `enableUnpluggedListCommand`       | Enables the public `/unplugged list` Command.                                                             | `true`   |
 | **Messages**  | `broadcastMessages`                | Enables the broadcasting of Unplugged status messages.                                                    | `false`  |
 | **Messages**  | `hideUnpluggedJoin`                | Enables the disabling of the default `player has joined` messages while bots are spawned, where possible. | `false`  |
 | **Messages**  | `displayDuration`                  | Enables the duration display of Unplugged status messages.                                                | `false`  |
 | **Messages**  | `displayReturnFeedback`            | Enables the Feedback display of the reason why an Unplugged session ended                                 | `false`  |
+| **Messages**  | `showUnpluggedTag`                 | Shows a configurable tag (default `[AFK]`) next to unplugged bots in the tab list.                        | `false`  |
+| **Messages**  | `notifyUnpluggedOnJoin`            | Privately informs a joining player which players are currently unplugged, if any.                         | `false`  |
 
 **Messages & Formatting:**
 Server owners can extensively customize broadcast messages and formatting. For example, the default kick message when a player successfully uses the command is `"§6Your player will be AFK§r"`.

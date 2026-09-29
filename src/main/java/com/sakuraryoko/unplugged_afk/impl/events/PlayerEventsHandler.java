@@ -95,6 +95,11 @@ public class PlayerEventsHandler implements IPlayerEventsDispatch
 		if (server != null)
 		{
 			UnpluggedPlayerUtils.hideAllUnpluggedFromPlayer(server, player);
+
+			if (!(player instanceof UnpluggedServerPlayer))
+			{
+				UnpluggedPlayerUtils.notifyPlayerOfUnplugged(server, player);
+			}
 		}
 
 		// Inform user if they had a pending status update (Such as a failed AFK session)
