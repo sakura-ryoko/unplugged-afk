@@ -10,7 +10,7 @@
 
 ## Prerequisites & Installation
 * **Mod Loader:** Fabric
-* **Minecraft Version:** 1.19.2 up to 26.2
+* **Minecraft Version:** 1.19.2 up to 26.3
 
 ## Features
 * **Go Green:** Turn off your PC while your player-bot continues to AFK for you.
