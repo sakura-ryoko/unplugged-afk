@@ -6,6 +6,7 @@
 **Unplugged-AFK** is an eco-friendly Minecraft mod that allows players to "go unplugged." By utilizing this mod, players can spawn a bot of themselves to stay AFK at their farms while they disconnect. This allows you to safely shut off your computer, saving electricity and promoting a "Green" approach to server farming!
 
 ![InfoGraphic](https://github.com/sakura-ryoko/unplugged-afk/blob/master/Infographic_hd.png?raw=true)
+( Imagery courtesy of [Stridey](https://modrinth.com/user/Stridey) )
 
 ## Prerequisites & Installation
 * **Mod Loader:** Fabric
